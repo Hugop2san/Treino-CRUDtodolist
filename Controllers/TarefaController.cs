@@ -6,6 +6,7 @@ using System.Linq;
 using System;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.OpenApi.Any;
+using todolist.Dto;
 
 namespace todolist.Controllers
 {
@@ -40,7 +41,7 @@ namespace todolist.Controllers
 
             tarefadb.Id = id;
             tarefadb.Titulo = tarefa.Titulo;
-            tarefadb.Descrição= tarefa.Descrição;
+            tarefadb.Descricao = tarefa.Descricao;
             tarefadb.Status = tarefa.Status;
             tarefadb.DataCriacao = new DateTime();
 
@@ -71,10 +72,18 @@ namespace todolist.Controllers
         } 
 
         [HttpPost("criartarefa")]
-        public async Task<ActionResult<Tarefa>> Criartarefa([FromBody] Tarefa tarefa)
+        public async Task<ActionResult<Tarefa>> Criartarefa([FromBody] DtoTarefa dtotarefa)
         {
-            if (tarefa == null)
+            if (dtotarefa == null)
                 return BadRequest("Tarefa Not Found");
+
+            var tarefa = new Tarefa()
+            {
+                Titulo = dtotarefa.Titulo,
+                Descricao = dtotarefa.Descricao,
+                Status = dtotarefa.Status,
+
+            };
 
             _context.Tarefas.Add(tarefa);
             await _context.SaveChangesAsync();
