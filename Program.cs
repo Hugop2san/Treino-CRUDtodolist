@@ -6,6 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Adicionando https no meu backendtambem
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost4200",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 //Setando o sqlite
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -18,6 +29,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//// Adicionando https no meu backendtambem
+app.UseCors("AllowLocalhost4200");
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
